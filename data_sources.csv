@@ -1,0 +1,6 @@
+dataset_id,display_name,source_url,expected_filename,byte_size,n_samples,n_views,n_clusters,view_dimensions,feature_fields,label_field
+bdgp,BDGP,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,BDGP.mat,35217800,2500,2,5,1750|79,X1|X2,Y
+fashion,Fashion,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,Fashion.mat,188170376,10000,3,10,784|784|784,X1|X2|X3,Y
+handwritten,Handwritten,https://github.com/ChuanbinZhang/Multi-view-datasets/tree/03ead31e6538322e4e0701c3c28a01595c1a015d,Handwritten.mat,3483654,2000,6,10,216|76|64|6|240|47,X,y
+hdigit,Hdigit,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,Hdigit.mat,5055209,10000,2,10,784|256,data,truelabel
+mnist_usps,MNIST-USPS,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,MNIST_USPS.mat,62760312,5000,2,10,784|784,X1|X2,Y
