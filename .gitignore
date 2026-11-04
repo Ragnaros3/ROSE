@@ -1,0 +1,29 @@
+# Local environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+# Downloaded data, generated masks and run outputs
+datasets/
+data/
+outputs/
+results/
+checkpoints/
+logs/
+regenerated_masks/
+masks/one_view_drop/
+*.mat
+*.npz
+*.npy
+*.pt
+*.pth
+*.ckpt
+*.log
+# Local manuscript and review artifacts
+*.pdf
+*.docx
+*.zip
