@@ -1,0 +1,16 @@
+
+cff-version: 1.2.0
+message: "If you use this software or its released artifacts, please cite the accompanying manuscript."
+type: software
+title: "ROSE: Reliability-Aware Observed-Support Spectral Embedding for Incomplete Multi-View Clustering"
+version: 1.1.0
+authors:
+  - family-names: Cai
+    given-names: Mingjie
+  - family-names: Wang
+    given-names: Ziran
+  - family-names: Huang
+    given-names: Chaoqun
+  - family-names: Chen
+    given-names: Liangzhou
+repository-code: "https://github.com/ragnaros3/rose"

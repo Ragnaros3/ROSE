@@ -153,7 +153,8 @@ def _checkpoint_diagnostics(
         if int(n_clusters) > 1
         else 0.0
     )
-    target_rank = _effective_rank(np.asarray(spectral_target.target))
+    # The selector uses U0 = N(T); the loss uses U = N(U0).
+    target_rank = _effective_rank(np.asarray(spectral_target.first_normalization))
     score_rank = _effective_rank(normalized)
     numeric_losses = [float(value.detach().cpu()) for value in losses.values()]
     diagnostics = CheckpointDiagnostics(
@@ -236,22 +237,25 @@ def train_mapper(
     records: list[MapperEpochRecord] = []
     states: dict[int, dict[str, torch.Tensor]] = {}
     endpoints: dict[int, tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
-    for epoch in range(1, int(settings.epochs) + 1):
-        mapper.train()
-        optimizer.zero_grad()
-        _outputs, losses = joint_spectral_loss(
-            mapper,
-            view_tensors,
-            mask_tensor,
-            target_tensor,
-            lambda_spec=float(settings.spectral_weight),
-            lambda_rec=float(settings.reconstruction_weight),
-            lambda_cv=float(settings.cross_view_weight),
-        )
-        if not bool(torch.isfinite(losses["loss_total"])):
-            raise RuntimeError("Mapper training produced a non-finite loss.")
-        losses["loss_total"].backward()
-        optimizer.step()
+    # Retain the untrained endpoint as in the evaluated implementation. It is
+    # excluded from valid candidates but can be selected by the fallback.
+    for epoch in range(0, int(settings.epochs) + 1):
+        if epoch > 0:
+            mapper.train()
+            optimizer.zero_grad()
+            _outputs, losses = joint_spectral_loss(
+                mapper,
+                view_tensors,
+                mask_tensor,
+                target_tensor,
+                lambda_spec=float(settings.spectral_weight),
+                lambda_rec=float(settings.reconstruction_weight),
+                lambda_cv=float(settings.cross_view_weight),
+            )
+            if not bool(torch.isfinite(losses["loss_total"])):
+                raise RuntimeError("Mapper training produced a non-finite loss.")
+            losses["loss_total"].backward()
+            optimizer.step()
 
         if epoch % int(settings.evaluation_interval) != 0:
             continue

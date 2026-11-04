@@ -1,0 +1,116 @@
+{
+  "checkpoint_selection": {
+    "maximum_largest_cluster_fraction": 0.6,
+    "minimum_cluster_entropy": 0.6,
+    "minimum_coordinate_variance": 1e-05,
+    "minimum_effective_rank_ratio": 0.65,
+    "minimum_epoch": 20,
+    "tie_break": "earlier_epoch",
+    "topology_ceiling_threshold": 0.98
+  },
+  "correction": {
+    "admission_threshold": 0.2,
+    "bootstrap_confidence": 0.95,
+    "bootstrap_replicates": 1000,
+    "bootstrap_seed": 60013,
+    "epochs": 40,
+    "evaluation_interval": 10,
+    "hidden_width": 32,
+    "learning_rate": 0.001,
+    "optional": true,
+    "relative_norm_weight": 0.01,
+    "response_budget_factor": 2.0,
+    "rho": 0.1,
+    "weight_decay": 0.0001
+  },
+  "mapper": {
+    "batch_mode": "full",
+    "dropout": 0.1,
+    "epochs": 120,
+    "evaluation_interval": 5,
+    "latent_width": 32,
+    "learning_rate": 0.001,
+    "loss_weights": {
+      "cross_view": 0.05,
+      "reconstruction": 0.1,
+      "spectral": 1.0
+    },
+    "optimizer": "AdamW",
+    "residual_blocks": 2,
+    "stem_width": 128,
+    "weight_decay": 0.0001
+  },
+  "numerical": {
+    "default_epsilon": 1e-08,
+    "edge_epsilon": 1e-12,
+    "float32_row_threshold": 1.1920928955078125e-06,
+    "local_scale_floor": 1e-06,
+    "row_norm_epsilon": 1e-12
+  },
+  "observed_support": {
+    "adaptive_k0": 25,
+    "adaptive_k_max": 35,
+    "adaptive_k_min": 10,
+    "boundary_neighbor": 30,
+    "local_scale_neighbor": 7,
+    "neighbor_pool": 45,
+    "similarity_floor": 0.01
+  },
+  "package_version": "1.1.0",
+  "protocol": {
+    "cluster_counts": {
+      "bdgp": 5,
+      "fashion": 10,
+      "handwritten": 10,
+      "hdigit": 10,
+      "mnist_usps": 10
+    },
+    "datasets": [
+      "bdgp",
+      "fashion",
+      "handwritten",
+      "hdigit",
+      "mnist_usps"
+    ],
+    "entry_missing_ratio": "eta / number_of_views",
+    "incomplete_sample_ratios": [
+      0.1,
+      0.3,
+      0.5,
+      0.7,
+      0.9
+    ],
+    "name": "one_view_drop",
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "reliability": {
+    "lambda_A": 0.5,
+    "positive_weight_max": 1.5,
+    "positive_weight_min": 0.5,
+    "rank_outer_factor": 0.5,
+    "reconstruction_neighbors": 5,
+    "single_direction_factor": 0.7,
+    "view_quality_support": "adaptive_admitted_per_view_support"
+  },
+  "runtime": {
+    "device": "cpu",
+    "torch_threads": 4
+  },
+  "seed_derivation": {
+    "bootstrap": "60013 + 1009 * seed",
+    "corrector": "2017 * seed + 59",
+    "final_kmeans": "seed",
+    "mapper": "1009 * seed + 31",
+    "mask": "seed",
+    "view_partition_zero_based": "seed + 101 * view_index"
+  },
+  "spectral": {
+    "eigenvectors": "K+1",
+    "kmeans_restarts": 20,
+    "solver_tolerance": 0.0001
+  }
+}

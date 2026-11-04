@@ -1,6 +1,6 @@
-dataset_id,display_name,source_url,expected_filename,byte_size,n_samples,n_views,n_clusters,view_dimensions,feature_fields,label_field
-bdgp,BDGP,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,BDGP.mat,35217800,2500,2,5,1750|79,X1|X2,Y
-fashion,Fashion,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,Fashion.mat,188170376,10000,3,10,784|784|784,X1|X2|X3,Y
-handwritten,Handwritten,https://github.com/ChuanbinZhang/Multi-view-datasets/tree/03ead31e6538322e4e0701c3c28a01595c1a015d,Handwritten.mat,3483654,2000,6,10,216|76|64|6|240|47,X,y
-hdigit,Hdigit,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,Hdigit.mat,5055209,10000,2,10,784|256,data,truelabel
-mnist_usps,MNIST-USPS,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,MNIST_USPS.mat,62760312,5000,2,10,784|784,X1|X2,Y
+dataset_id,display_name,source_url,expected_filename,sha256,byte_size,n_samples,n_views,n_clusters,view_dimensions,feature_fields,label_field
+bdgp,BDGP,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,BDGP.mat,8fd291471cb1c36946877b89d0ccb508511b6181f7a4c853539f9f74c7dbc9b8,35217800,2500,2,5,1750|79,X1|X2,Y
+fashion,Fashion,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,Fashion.mat,28e39097c5c21dc821afdd1d6e97f6bc9aedf0540d897a620c01da4daf1a8c9c,188170376,10000,3,10,784|784|784,X1|X2|X3,Y
+handwritten,Handwritten,https://github.com/ChuanbinZhang/Multi-view-datasets/tree/03ead31e6538322e4e0701c3c28a01595c1a015d,Handwritten.mat,6092a69891afa22785bffd5a4348f52d49a764aa5d40751ec2c4dc0f6ed48a44,3483654,2000,6,10,216|76|64|6|240|47,X,y
+hdigit,Hdigit,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,Hdigit.mat,af2f600a05137ab12697a169397864d6be7c5bee40ba4ce25db7f4074f0296ce,5055209,10000,2,10,784|256,data,truelabel
+mnist_usps,MNIST-USPS,https://www.heywhale.com/mw/dataset/65213e24d40e0c1a58d35b3d/file,MNIST_USPS.mat,9b8417a9dcbd8ef335a9d169ae93bcc8cd32db15e9c6d2bd208736e0e72d7a0d,62760312,5000,2,10,784|784,X1|X2,Y

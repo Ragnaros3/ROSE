@@ -99,16 +99,19 @@ def select_checkpoint(
     minimum_effective_rank_ratio: float = 0.65,
     minimum_feature_variance: float = 1.0e-5,
 ) -> CheckpointDiagnostics:
-    """Apply the frozen selector followed by the strict balance-drift safeguard."""
+    """Apply the frozen validity, selection and balance-drift rules.
+
+    The minimum epoch restricts valid candidates only. If none is valid,
+    choose the minimum spectral loss among all recorded checkpoints,
+    including epoch zero when supplied; loss ties choose the earlier epoch.
+    A fallback does not certify that a checkpoint meets validity criteria.
+    """
 
     if not rows:
         raise ValueError("At least one checkpoint is required.")
-    effective_rows = [row for row in rows if int(row.epoch) >= int(minimum_epoch)]
-    if not effective_rows:
-        raise ValueError("No checkpoint satisfies the minimum epoch.")
     candidates = [
         row
-        for row in effective_rows
+        for row in rows
         if is_valid_checkpoint(
             row,
             n_clusters,
@@ -119,7 +122,7 @@ def select_checkpoint(
             minimum_feature_variance=minimum_feature_variance,
         )
     ]
-    base = _current_selector(effective_rows, candidates, topology_ceiling)
+    base = _current_selector(rows, candidates, topology_ceiling)
     if not candidates or int(base.epoch) < 100:
         return base
     warmup = min(candidates, key=lambda row: int(row.epoch))
