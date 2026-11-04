@@ -163,7 +163,8 @@ def main() -> None:
         "topology_ceiling": bool(result.topology_ceiling),
         "utilization_alpha": float(result.graph.utilization_alpha),
         "utilization_reason": str(result.graph.utilization_reason),
-        "need": asdict(result.need),
+        "need": asdict(result.need) if result.need is not None else None,
+        "correction_skip_reason": result.correction_skip_reason,
         "correction_applied": result.correction_training is not None,
     }
     if args.evaluate:

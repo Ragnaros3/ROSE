@@ -76,7 +76,7 @@ class RoseRunResult:
     graph: FixedSupportGraph
     spectral_target: SpectralTarget
     mapper_training: MapperTrainingResult
-    need: NeedDecision
+    need: NeedDecision | None
     correction_training: CorrectionTrainingResult | None
     topology_ceiling: bool
     co_observed_giant_ratio: float
@@ -87,6 +87,7 @@ class RoseRunResult:
     correction_delta: np.ndarray
     residual_ratio: np.ndarray
     prediction: np.ndarray
+    correction_skip_reason: str | None = None
 
 
 def _mapping(value: Any, name: str) -> Mapping[str, Any]:
@@ -346,27 +347,36 @@ def run_rose(
         for value in scaled_views
     ]
     mask_tensor = torch.as_tensor(mask_array, dtype=torch.float32, device=device)
-    counterfactual = make_counterfactual_batch(
-        mapper_training.mapper,
-        view_tensors,
-        mask_tensor,
-    )
-    need = bootstrap_need_decision(
-        counterfactual,
-        seed=int(seed),
-        rho=float(settings.correction.rho),
-        response_budget_factor=float(settings.admission.response_budget_factor),
-        bootstrap_replicates=int(settings.admission.bootstrap_replicates),
-        bootstrap_alpha=float(settings.admission.bootstrap_alpha),
-        bootstrap_seed=int(settings.admission.bootstrap_seed),
-    )
-    if not math.isclose(
-        need.threshold,
-        settings.admission.admission_threshold,
-        rel_tol=0.0,
-        abs_tol=1.0e-12,
-    ):
-        raise RuntimeError("The computed Need threshold differs from the configuration.")
+    need: NeedDecision | None = None
+    correction_skip_reason: str | None = None
+    if not settings.admission.optional:
+        correction_skip_reason = "disabled"
+    elif not bool(torch.any(torch.sum(mask_tensor, dim=1) == float(summary.n_views))):
+        correction_skip_reason = "no_complete_samples"
+    else:
+        counterfactual = make_counterfactual_batch(
+            mapper_training.mapper,
+            view_tensors,
+            mask_tensor,
+        )
+        need = bootstrap_need_decision(
+            counterfactual,
+            seed=int(seed),
+            rho=float(settings.correction.rho),
+            response_budget_factor=float(settings.admission.response_budget_factor),
+            bootstrap_replicates=int(settings.admission.bootstrap_replicates),
+            bootstrap_alpha=float(settings.admission.bootstrap_alpha),
+            bootstrap_seed=int(settings.admission.bootstrap_seed),
+        )
+        if not math.isclose(
+            need.threshold,
+            settings.admission.admission_threshold,
+            rel_tol=0.0,
+            abs_tol=1.0e-12,
+        ):
+            raise RuntimeError("The computed Need threshold differs from the configuration.")
+        if not need.need_admitted:
+            correction_skip_reason = "not_admitted"
 
     correction_training: CorrectionTrainingResult | None = None
     base_scores = torch.as_tensor(
@@ -374,7 +384,7 @@ def run_rose(
         dtype=torch.float32,
         device=device,
     )
-    if settings.admission.optional and need.need_admitted:
+    if need is not None and need.need_admitted:
         corrector_seed = _linear_seed(
             settings.seed_derivation["corrector"],
             int(seed),
@@ -426,6 +436,7 @@ def run_rose(
         correction_delta=delta.detach().cpu().numpy().astype(np.float32),
         residual_ratio=residual_ratio.detach().cpu().numpy().astype(np.float32),
         prediction=prediction.astype(np.int64),
+        correction_skip_reason=correction_skip_reason,
     )
 
 

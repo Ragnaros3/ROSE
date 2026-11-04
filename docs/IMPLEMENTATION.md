@@ -41,6 +41,8 @@ The agreement, loss-band and drift comparisons use tolerance 1e-12. The selected
 
 ## Bounded correction and evaluation
 
-The corrector uses counterfactual view drops on complete samples. The supplied missingness settings retain complete samples for this decision. Admission uses 1,000 bootstrap replicates and the lower 2.5th percentile of the response statistic, with threshold 2*rho=0.20. The corrector state is taken after 40 updates.
+The corrector uses counterfactual view drops on complete samples. Admission uses 1,000 bootstrap replicates and the lower 2.5th percentile of the response statistic, with threshold 2*rho=0.20. The corrector is fitted only when admission succeeds, and its state is taken after 40 updates.
+
+If correction is disabled or no complete samples are available, the base scores pass through with zero residuals. Need is not computed in these two cases: the run summary records `need: null` and `correction_skip_reason` as `disabled` or `no_complete_samples`. A computed rejection retains its Need statistics and records `not_admitted`; an applied correction has no skip reason. The standard incomplete-sample fractions and all other settings remain unchanged.
 
 `rose/correction.py` projects the raw update orthogonally to the base scores and bounds its norm by rho=0.10 times the base-score norm, with the explicit zero branch. Complete samples receive zero direct residual. The final normalized scores are clustered with 20 K-means restarts. The protocol seed controls final clustering; mapper, corrector and bootstrap seed formulas are in the configuration. True labels enter only optional final metric evaluation.
